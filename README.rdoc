@@ -1,0 +1,133 @@
+= GEM: iron-settings
+
+Written by Rob Morris @ Irongaze Consulting LLC (http://irongaze.com)
+
+== DESCRIPTION
+
+A set of classes to support elegant class and instance level settings, both 
+static (in files/code) and dynamic (database-backed).
+
+== SYNOPSIS
+
+Managing settings in applications is a pain.  This gem makes it less so.  You define your setting 
+structure using a simple DSL, then override it as needed in your code or via user interaction.  Great for
+gem-based tools, frameworks, etc needing elegant customization, and great for any project
+wanting to have flexible, powerful user-editable settings stored in a database.
+
+As an example, consider the User model in any given Rails-based site.  Here's how we could add
+some flexible settings:
+
+    class User < ActiveRecord::Base
+
+      # Declare our settings schema for this model with types, names and defaults.
+      # Each model instance will have its own set of values for these settings.
+      instance_settings do
+        # homepage is a string, with a default of '/dashboard'
+        string('homepage', '/dashboard')
+
+        # Groups let you bundle settings together, as well as namespace
+        # items if so desired
+        group('notification') do
+          # This setting has a dynamic default - basically a block that gets evaluated to generate
+          # a default value.  It has access to the model that owns it - in this case, we have
+          # an email notification address that defaults to the user's primary email.
+          string('email') {|user| user.email}
+          
+          # Lists (aka arrays) are also supported, of any of the supported types
+          int_list('subscriptions', [ListServe::NEWS_GROUP, ListServe::ALERTS])
+        end
+      end
+
+    end
+
+To work with these settings:
+
+    # Create a new user
+    >> @user = User.new(:email => 'info@irongaze.com')
+
+    # Default values are available immediately
+    >> puts @user.settings.homepage
+    => '/dashboard'
+
+    # Override the default value for this user
+    >> @user.settings.homepage = '/dashboard-v2'
+
+    # Update his notification frequency, drilling down into the 'notification' group
+    >> @user.settings.notification.frequency = 10
+    
+    # Settings are saved when the model that owns them is saved
+    >> @user.save!
+    
+    # Once saved, the settings are reloaded as needed
+    >> puts User.find_by_email('info@irongaze.com').settings.homepage
+    => '/dashboard-v2'
+
+Static settings work differently.  Imagine you are building a command-line tool that needs
+configuration info.  
+
+    class MyTool
+
+      # You'd first define your schema at class level, passing the file
+      # you want to use as an option on creation
+      class_settings(:file => '~/.mytool') do
+        string('api_key')
+        string('base_path', '~')
+      end
+      
+      def initialize
+        # The bound file will be loaded automatically if present on first access.
+        # Verify we have what we need - interrogative version of keys tests for the
+        # presence of a non-default value.
+        unless MyTool.settings.api_key?
+          raise "You must define your API key in your ~/.mytool settings file!"
+        end
+      end
+  
+    end
+    
+Now, your users could create a .mytool file like so:
+
+    api_key   '1234ASDF'
+    base_path '~/code'
+    
+On calling MyTool.settings, this file would be loaded and override the settings defaults.
+    
+You could set up a similar arrangement for managing settings for Gems and other reusable libraries.
+
+== LIMITATIONS
+
+Database-backed settings are not a panacea.  They duplicate functionality that could be built more 
+directly using standard model attributes.  In particular, care must be taken to avoid changing existing
+entry paths and data types, as doing so will invalidate saved values and potentially cause errors
+on loading prior values.
+
+In addition, they are not intended for storing hundreds of thousands of values!  Like any key/value
+store, they are a tool suited for certain tasks.
+
+== REQUIREMENTS
+
+Depends on the iron-extensions gem, and optionally requires ActiveRecord to support db-backed 
+dynamic settings.
+
+Requires RSpec, ActiveRecord and Sqlite3 gems to build/test.
+
+== INSTALLATION
+
+To install, simply run:
+
+    sudo gem install iron-settings
+    
+RVM users can skip the sudo:
+  
+    gem install iron-settings
+
+Then use
+
+    require 'iron/settings'
+    
+to require the library code.
+
+If you want to use db-backed settings (for example, for per-model settings), you will need to run
+the settings-creation migration.  In a Rails project, simply run the provided rake settings:install task, 
+which will copy the required migration into your app.  If you're using this in a non-Rails environment,
+you can manually run the migration in <gem_path>/db/settings_migration.rb.

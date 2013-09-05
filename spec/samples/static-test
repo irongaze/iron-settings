@@ -1,0 +1,4 @@
+# A comment
+val1 200
+val2 'dog' + 'bone'
+group1.val3 :a_symbol

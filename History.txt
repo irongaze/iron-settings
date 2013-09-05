@@ -1,0 +1,9 @@
+== 1.0.0 / 2013-09-XX
+
+* Initial revision
+* Working class and instance level settings definition
+* Working static and db-backed value stores
+* Working user-specifiable settings data types
+* Reload support for file timestamp, timeout, and custom proc-based reload logic
+* Security checking for file ownership and world-writability on settings files
+* Working Rails integration
