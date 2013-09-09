@@ -28,6 +28,7 @@ describe Settings::Cursor do
   end
   
   it 'should test for value presence using interogator' do
+    CursorTest.settings.val1?.should be_true
     CursorTest.settings.val2?.should be_false
     CursorTest.settings.val2 100
     CursorTest.settings.val2?.should be_true
@@ -84,9 +85,7 @@ describe Settings::Cursor do
   end
   
   it 'should return keys relative to its bound group' do
-    CursorTest.settings.top.middle.entry_keys.should match_array([
-      'bottom.leaf', 'bottom.lamby'
-    ])
+    CursorTest.settings.top.middle.entry_keys.should match_array(['bottom.leaf', 'bottom.lamby'])
   end
   
   it 'should eval lambda defaults in the context of the root cursor' do

@@ -108,8 +108,8 @@ class Settings
         
       elsif item.entry?
         if query
-          # Return true if the given item has a (non-default) value
-          return item_has_value?(item)
+          # Return true if the given item has a non-nil value
+          return !item_value(item).nil?
         else
           if args.empty?
             # No args means return the current value (or default if none)

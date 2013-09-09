@@ -1,4 +1,8 @@
-== 1.0.0 / 2013-09-XX
+== 1.0.1 / 2013-09-09
+
+* Clarify that <owner>.group.entry? returns true if any non-nil value is present, default or explicitly set
+
+== 1.0.0 / 2013-09-05
 
 * Initial revision
 * Working class and instance level settings definition

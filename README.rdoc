@@ -76,8 +76,8 @@ configuration info.
       
       def initialize
         # The bound file will be loaded automatically if present on first access.
-        # Verify we have what we need - interrogative version of keys tests for the
-        # presence of a non-default value.
+        # Verify we have what we need - interrogative version of keys test for the
+        # presence of a non-nil value.
         unless MyTool.settings.api_key?
           raise "You must define your API key in your ~/.mytool settings file!"
         end
@@ -103,6 +103,10 @@ on loading prior values.
 
 In addition, they are not intended for storing hundreds of thousands of values!  Like any key/value
 store, they are a tool suited for certain tasks.
+
+Settings files are full Ruby files, and evaluated during settings load.  This means they must be 
+carefully managed to avoid the potential for security issues.  By default, settings files must
+be owned by the user running the current process, and they must NOT be world-writable.
 
 == REQUIREMENTS
 
