@@ -33,7 +33,7 @@ class Settings #:nodoc:
           Settings::DbStore.new(@settings_class_root, @settings_class_options)
       end
 
-      # Force a settings reload (from db or file(s) depending on settings) regarless
+      # Force a settings reload (from db or file(s) depending on settings) regardless
       # of need to reload automatically.  Useful for testing, but not generally needed in production use
       def reload_settings
         @settings_values.load

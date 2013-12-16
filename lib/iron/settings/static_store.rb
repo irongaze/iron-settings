@@ -43,7 +43,6 @@ class Settings
     end
 
     # Loads a single settings file, verifying its existence, ownership/security, etc.
-    # 
     def load_file(path)
       # Ensure we have the file, if so required
       raise RuntimeError.new("Missing settings file #{path} - this file is required") unless @ignore_missing || File.exists?(path)
@@ -75,6 +74,10 @@ class Settings
       # Not requiring security?  File doesn't exist?  Then everything is fine...
       return unless (File.exists?(path) && @secure)
       
+      # Root can read all files, useful for backups and of course no security lost
+      return if Process.uid == 0
+      
+      # Check file ownership
       stat = File::Stat.new(path)
       raise RuntimeError.new("Cannot load settings file #{path} - file must be owned by the user this program is running as (UID #{Process.uid})") unless stat.owned?
       raise RuntimeError.new("Cannot load settings file #{path} - file cannot be world-writable") if stat.world_writable?

@@ -6,7 +6,9 @@ task :default => 'install'
 
 # Do our rspec thang
 desc "Run specs"
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:quiet_spec) do |t|
+  t.verbose = false
+end
 
 # Find and return the name of our latest gem
 def latest
@@ -43,7 +45,7 @@ task :test do
   puts ""
   puts "Testing gem"
   puts "--------------------"
-  Rake::Task['spec'].invoke
+  Rake::Task['quiet_spec'].invoke
   puts "Specs passed!"
 end
 
