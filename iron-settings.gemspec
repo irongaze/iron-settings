@@ -9,7 +9,8 @@ Gem::Specification.new do |s|
   # s.post_install_message = "Thanks for installing!"
 
   # Additional dependencies
-  s.add_dependency "iron-extensions", "~> 1.1.3"
+  s.add_dependency "iron-extensions", "~> 1.2"
+  s.add_dependency "iron-dsl", "~> 1.0"
 
   # Include all gem files that should be packaged
   s.files = Dir[

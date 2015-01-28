@@ -1,3 +1,7 @@
+== 1.0.3 / 2015-01-27
+
+* Update to use new 1.2 version of iron-extensions and add dependency on iron-dsl gem
+
 == 1.0.2 / 2013-12-16
 
 * Tweak settings file security check in StaticStore to allow reading files if running as root

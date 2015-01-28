@@ -2,6 +2,7 @@
 require 'tmpdir'
 require 'fileutils'
 require 'iron/extensions'
+require 'iron/dsl'
 
 # Top-level class with numerous helper methods for defining and handling
 # our supported settings data types.
