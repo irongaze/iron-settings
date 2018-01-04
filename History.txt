@@ -1,3 +1,9 @@
+== 1.0.4 / 2018-01-03
+
+* Update docs to show group setting for static values
+* Add Cursor#entry_values to allow getting a hash of all values for a given group
+* Update Cursor#method_missing to return false if querying for a missing entry
+
 == 1.0.3 / 2015-01-27
 
 * Update to use new 1.2 version of iron-extensions and add dependency on iron-dsl gem

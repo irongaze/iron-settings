@@ -37,6 +37,7 @@ class Settings #:nodoc:
       # of need to reload automatically.  Useful for testing, but not generally needed in production use
       def reload_settings
         @settings_values.load
+        true
       end
 
     end

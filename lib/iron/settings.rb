@@ -122,6 +122,7 @@ class Settings
 
   def self.classes
     @classes ||= []
+    @classes
   end
 
   def self.default_timestamp_file(class_name)

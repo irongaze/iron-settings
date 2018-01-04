@@ -29,6 +29,14 @@ class Settings
       keys
     end
     
+    # Returns a hash of all entry keys to their values at the cursor's current 
+    # position, and optionally including all child keys.  If the cursor is at 
+    # a sub-group node, keys will be relative to that node.
+    def entry_values(include_all = true)
+      keys = entry_keys(include_all)
+      keys.convert_to_hash {|k| item_value(find_item(k)) }
+    end
+    
     # Returns all group keys
     def group_keys(include_all = false)
       keys = @group.entries(include_all).collect {|e| e.key }
@@ -93,7 +101,13 @@ class Settings
       item = @group.find_item(method)
       if item.nil?
         # Unknown item name, whoops.
-        raise RuntimeError.new("Unknown settings group or entry '#{method}' for settings path #{@group.key}")
+        if query
+          # Querying for existence of key is fine if it's missing
+          return false
+        else
+          # Setting or getting, GTFO
+          raise RuntimeError.new("Unknown settings group or entry '#{method}' for settings path #{@group.key}")
+        end
         
       elsif item.group?
         if query

@@ -91,5 +91,20 @@ describe Settings::Cursor do
   it 'should eval lambda defaults in the context of the root cursor' do
     CursorTest.settings.top.middle.bottom.lamby.should == 6
   end
+
+  it 'should return a hash of keys to vals' do
+    CursorTest.settings.invalid_default = 'hi'
+    CursorTest.settings.entry_values.should == {
+      'val1' => 5,
+      'val2' => nil,
+      'top.middle.bottom.lamby' => 6,
+      'top.middle.bottom.leaf' => nil,
+      'invalid_default' => 'hi'
+    }
+  end
+  
+  it 'should return false on interrogating a missing key' do
+    CursorTest.settings.bob?.should be_false
+  end
   
 end

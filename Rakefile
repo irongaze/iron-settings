@@ -7,7 +7,10 @@ task :default => 'install'
 # Do our rspec thang
 desc "Run specs"
 RSpec::Core::RakeTask.new(:quiet_spec) do |t|
+  # Don't show the file list at startup
   t.verbose = false
+  # If any tests are set to :focus status, only run those tests
+  t.rspec_opts = '--tag focus'
 end
 
 # Find and return the name of our latest gem
@@ -20,6 +23,12 @@ end
 def version
   raise "Missing Version.txt file!" unless File.exist?('Version.txt')
   File.read('Version.txt').strip
+end
+
+desc 'Load up an IRB shell pre-loaded with this gem'
+task :console do
+  path = File.basename(Dir.pwd).gsub('-', '/')
+  exec "irb -r ./lib/#{path}.rb"
 end
 
 desc 'Build gem'
@@ -37,7 +46,7 @@ task :install => [:build] do
   puts ""
   puts "Installing #{latest}"
   puts "--------------------"
-  puts `gem install #{latest} --no-rdoc --no-ri`
+  puts `gem install #{latest} --local --no-rdoc --no-ri`
 end
 
 desc 'Test the gem'

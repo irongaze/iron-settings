@@ -72,6 +72,10 @@ configuration info.
       class_settings(:file => '~/.mytool') do
         string('api_key')
         string('base_path', '~')
+        group('options') do
+          bool('debug', false)
+          bool('verbose', false)
+        end
       end
       
       def initialize
@@ -85,10 +89,15 @@ configuration info.
   
     end
     
-Now, your users could create a .mytool file like so:
+Now, your users could create a .mytool file like so.  Notice how there are no equals signs,
+and the group settings can be accessed in a block:
 
     api_key   '1234ASDF'
     base_path '~/code'
+    options do
+      debug   true
+      verbose true
+    end
     
 On calling MyTool.settings, this file would be loaded and override the settings defaults.
     
@@ -127,7 +136,7 @@ RVM users can skip the sudo:
 
 Then use
 
-    require 'iron/settings'
+    require 'iron-settings'
     
 to require the library code.
 
